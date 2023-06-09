@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./index.css">
+    <link rel="icon" href="./search_google.png">
+    <title> Google تخصيص بحث </title>
+</head>
+<body>
+
+    <main>
+        <article>
+            <h2 id="title">ابـحـث عـن شـي مـخـصـص فـي جـوجـل</h2>
+            <section>
+                <div>
+                    <textarea id="input" rows="1" placeholder="بـحـث"></textarea>
+
+                    <nav id="nav">
+                        <b id="first_b">
+                            <span id="value_select">نـمـوذج</span>
+                            <span>◮</span>
+                        </b>
+                        <div id="dropdown">        
+                            <b id="image_0"><span>png</span> صور</b>
+                            <b id="image_1"><span>jpg</span> صور</b>
+                            <b id="image_2"><span>icon</span> ايقونات</b>
+                            <b id="image_3"><span>psd</span> فوتوشوب</b>
+                            <b id="image_4"><span>ai</span> الستريتور</b>
+
+                            <hr>
+
+                            <b id="file_0"><span>pdf</span> ملفات</b><!-- filetype:pdf -->
+                            <b id="file_1"><span>docx</span> وورد</b><!-- filetype:pdf -->
+                            <b id="file_2"><span>pptx</span> باوربوينت</b><!-- filetype:pdf -->
+                            <b id="file_3"><span>py</span> بايثون</b><!-- filetype:pdf -->
+                            <b id="file_4"><span>java</span> جافا</b><!-- filetype:pdf -->
+                            
+                            <hr>
+
+                            <b id="b_text_1">بحث في دولة معينة</b><!-- "yemen" text -->
+                            <b id="b_text_2">بحث داخل موقع معين</b><!-- text site:web -->
+                            <b id="b_text_3">اظهار كل المحتوى الذي يملك كلمة معينة</b><!-- text+اي شي -->
+                            <b id="b_text_4">اظهار كل المحتوى الذي <span style="color: red;">لا</span> يملك كلمة معينة</b>
+                            <b id="b_text_5">البحث عن اي كلمة مدرجة (في حالة لاتعرف عنوان البحث بالكامل)</b><!--  "ش*لا*ؤ" -->
+                            <b id="b_text_6">البحث باكثر من جملة</b><!--  "1" OR "2" -->
+                            <b id="b_text_7">البحث عن الكلمة المدرجة في جميع المواقع والصفحات</b><!--  "allintext:الكلمة" -->
+                            <b id="b_text_8">البحث بالنص المدرج فقط</b><!--  "text" -->
+                            <b id="b_text_9">معرفة معلومات متعلقة بموقع معين</b><!--  info web -->
+                        </div>
+                    </nav>
+                    <img src="./search_google.png" id="img_search" width="20" alt="">
+                    <a href="#" id="link_search" target="_blank"></a>
+                </div>
+            </section>
+        </article>
+    </main>
+    
+
+    <script src="./boot/jquery.js"></script>
+    <script>
+
+        
+        var input = document.getElementById("input")
+        const h = parseInt(getComputedStyle(input).getPropertyValue('height'))
+
+        input.addEventListener("input", function() {
+            input.style.height = `${h}px`
+            input.style.padding = `5px`
+            const newh = input.scrollHeight - h;
+            input.style.height = `${newh}px`
+        })
+
+        $(function () {
+            // document.getElementById("link_search").click()
+            
+            $("#first_b span:last-child").click( function () {
+                let item = document.getElementById("dropdown")
+                if(getComputedStyle(item).getPropertyValue('display') == 'none'){
+                    $("nav div").css("display","flex")
+                    $(this).css("transform","none")
+                }
+                else if(getComputedStyle(item).getPropertyValue('display') == "flex"){
+                    $("nav div").css("display","none")
+                    $(this).css("transform","rotate(180deg)")
+                }
+            })
+
+            
+            var google = '';
+            $("b:not(#first_b)").click( function () {
+                $value_b = $(this).text()
+                $("#value_select").text($value_b)
+
+                $("nav div b").css({"background-color":"whitesmoke","color":"black"})
+                $(this).css({"background-color":"rgb(0, 149, 255)","color":"whitesmoke"})
+                $("nav div").css("display","none")
+
+                $("#first_b span:last-child").css("transform","rotate(180deg)")
+                
+                $id_b = $(this).attr('id')
+
+                $("#value_select").removeClass()
+
+                let arr_i = ['png','jpg','icon','psd','ai']
+                for (const key in arr_i) {
+                    if ($(this).attr('id') == `image_${key}`) {
+                        google = ' .'+arr_i[key]+' :intitle'
+                        break
+                    }
+                }
+
+                let arr_f = ['pdf','docx','pptx','py','java']
+                for (const key in arr_f) {
+                    if ($(this).attr('id') == `file_${key}`) {
+                        google = ' filetype:'+arr_f[key]
+                        break
+                    }
+                }
+                
+
+                if($id_b == 'b_text_1'){
+                    let name = prompt("اكتب اسم البلد")
+                    if(name == '' || name == null){
+                       $("#value_select").text('نـمـوذج')
+                    }else{
+                        google = '"'+name+'"'
+                    }
+                }else if($id_b == 'b_text_2'){
+                    let web = prompt("اكتب عنوان الموقع")
+                    if(web == '' || web == null){
+                       $("#value_select").text('نـمـوذج')
+                    }else{
+                        google = 'site:'+web
+                    }
+                    
+                }else if($id_b == 'b_text_3'){
+                    let plus = prompt("ادرج كلمة")
+                    if(plus == '' || plus == null){
+                       $("#value_select").text('نـمـوذج')
+                    }else{
+                        google = '+'+plus
+                    }
+                    
+                }else if($id_b == 'b_text_4'){
+                    let minus = prompt("ادرج كلمة")
+                    if(minus == '' || minus == null){
+                       $("#value_select").text('نـمـوذج')
+                    }else{
+                        google = '-'+minus
+                    }
+                    
+                }else if($id_b == 'b_text_5'){
+                    let texts = prompt("ادرج الكلمات وضع فاصلة بين كل كلمة")
+                    if(texts == '' || texts == null){
+                       $("#value_select").text('نـمـوذج')
+                    }else{
+                        google = texts.replaceAll(",","*")
+                    }
+                }else if($id_b == 'b_text_6'){
+                    let texts = prompt("اكتب عنوانين وافصل بينهما بـــ#")
+                    let search_ = texts.search("#")
+                    let slice_1 = texts.slice(0,search_)
+                    let slice_2 = texts.slice(search_+1)
+                    if(texts == '' || texts == null){
+                       $("#value_select").text('نـمـوذج')
+                    }else{
+                        google = '"'+slice_1+'" OR "'+slice_2+'"'
+                    }
+                }else if($id_b == 'b_text_7'){
+                    // let word = prompt("ادرج كلمة")
+                    // google = '"allintext:'+word+'"'
+                    $("#value_select").addClass("b_text_7")
+                }
+                else if($id_b == 'b_text_8'){
+                    // let text = prompt("اكتب العنوان")
+                    // google = '"'+text+'"'
+
+                    $("#value_select").addClass("b_text_8")
+                }
+                else if($id_b == 'b_text_9'){
+                    // let link = prompt("ادرج عنوان الموقع")
+                    // google = 'info,'+link
+
+                    $("#value_select").addClass("b_text_9")
+                }
+            })
+
+            
+            $("#img_search").click(function () {
+                if($("#input").val() == ""){
+                    $("#input").attr("placeholder","ادخل عنوان للبحث اولاً")
+                    $("#input").addClass("textarea")
+                }else{
+                    let text = $("#input").val()
+                    $("#input").removeClass()
+                    $("#input").attr("placeholder","بحث")
+
+                    if($("#value_select").attr("class") == "b_text_8"){
+                        $value_search = "https://www.google.com/search?q="+'"'+text+'"'
+                    }else if($("#value_select").attr("class") == "b_text_7"){
+                        $value_search = "https://www.google.com/search?q="+'"allintext:'+text+'"'
+                    }else if($("#value_select").attr("class") == "b_text_9"){
+                        $value_search = "https://www.google.com/search?q="+'info, '+text
+                    }else if(google != ''){
+                        $value_search = "https://www.google.com/search?q="+text+google
+                    }else{
+                        $value_search = "https://www.google.com/search?q="+text
+                    }
+
+                    // $value_search = "https://www.google.com/search?q="+text+google
+
+                    $("#link_search").attr("href",$value_search)
+                    document.getElementById("link_search").click()
+                    
+                }                
+            })
+        })
+    </script>
+</body>
+</html>
